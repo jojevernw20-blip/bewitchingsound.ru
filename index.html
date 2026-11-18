@@ -205,7 +205,13 @@ a.linkbtn{text-decoration:none;display:inline-block}
 .slide svg{background:none;border-radius:0}
 .slide .ph{aspect-ratio:16/9}
 .slide figcaption{font-size:15px;line-height:1.45;color:var(--muted);margin-top:10px}
+.grp{font:13px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--em);margin:26px 0 6px}
+.tabs{display:flex;gap:8px;margin:24px 0 8px}
+.tabs button{flex:1;font:700 17px "Rubik",Arial,sans-serif;color:var(--ink);background:none;border:1.5px solid var(--line);border-radius:999px;padding:12px 18px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tabs button:focus-visible{outline:3px solid var(--em);outline-offset:3px}
 </style>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%2240%20-20%20330%20310%22%3E%3Crect%20x=%2240%22%20y=%22-20%22%20width=%22330%22%20height=%22310%22%20rx=%2256%22%20fill=%22%23131A28%22/%3E%3Ccircle%20cx=%22245%22%20cy=%22150%22%20r=%22100%22%20fill=%22%23E8D9A8%22/%3E%3Cg%20stroke=%22%23E6EBF3%22%20stroke-width=%229%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22%20fill=%22none%22%3E%3Cg%20transform=%22translate(30%206)%20rotate(24%20160%20190)%22%3E%3Crect%20x=%22147%22%20y=%222%22%20width=%2224%22%20height=%2230%22%20rx=%225%22/%3E%3Cpath%20d=%22M151%2032V134M167%2032V134%22/%3E%3Cpath%20fill=%22%23131A28%22%20d=%22M159%20122c24%200%2040%2014%2036%2034%2014%208%2022%2022%2022%2038%200%2030-26%2056-58%2056s-58-26-58-56c0-16%208-30%2022-38-4-20%2012-34%2036-34z%22/%3E%3Ccircle%20cx=%22159%22%20cy=%22196%22%20r=%2215%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
 </head>
 <body>
 <header>
@@ -273,6 +279,7 @@ a.linkbtn{text-decoration:none;display:inline-block}
     <p>Я играю на гитаре много лет и хорошо помню, как начинал. Учился и сам, методом проб и ошибок, и с несколькими преподавателями. Самостоятельно я потратил на это гораздо больше времени, чем мог бы: важные вещи оставались непонятными, пока кто-то не объяснил их вовремя и в нужном порядке.</p>
     <p>За это время я понял главное: найти подход к каждому человеку важнее всего. Невозможно знать всё и делать всё идеально, но можно правильно объяснить и подобрать путь под конкретного ученика.</p>
     <p>Поэтому на занятиях я даю то, чего мне самому не хватало. Каждая тема опирается на предыдущую, а теории ровно столько, сколько пригодится в игре. У меня высшее педагогическое образование (МПГУ), так что я умею объяснять сложное простым языком.</p>
+    <p>Мне близки спокойные жанры: инди, эмбиент, всё неспешное, что оставляет место для тишины. Меня вдохновляют Рик Рубин и Филип Тосио Судо, и их взгляд на музыку стал частью моего подхода: осознанность, внимание к звуку, немного медитации. Играть лучше, когда не торопишься. Поэтому на занятиях мы не гонимся за скоростью, а замедляемся, слушаем каждую ноту и чувствуем собственные руки.</p>
     <p>Моя цель — помочь тебе пройти этот путь быстрее и без лишних ошибок, а главное, чтобы занятия приносили удовольствие. Я занимаюсь и с теми, кто берёт гитару впервые, и с теми, кто давно играет, но хочет понять, как всё устроено.</p></div>
     <p class="more"><button class="linkbtn" id="aboutMore" type="button" aria-expanded="false" aria-controls="aboutText">Читать дальше</button></p>
     <div class="tiles">
@@ -295,6 +302,8 @@ a.linkbtn{text-decoration:none;display:inline-block}
       <dd>Упражнения на технику и столько теории, сколько нужно, чтобы знания закрепились в пальцах и в голове. Редко применяемое подаётся как интересные факты, а не как зубрёжка.</dd>
       <dt>Индивидуальный подход</dt>
       <dd>Уверенный старт, разбор песен, устройство гитары, чтение табов: всё встраивается в занятия. Песни служат инструментом для освоения материала.</dd>
+      <dt>Без спешки</dt>
+      <dd>Осознанность и внимание к звуку: замедляемся, слушаем, как звучит каждая нота. Так игра становится свободной.</dd>
       <dt>Материалы</dt>
       <dd>Авторские пособия и видеоуроки, к которым можно вернуться в любое время.</dd>
       <dt>Мотивация</dt>
@@ -304,14 +313,21 @@ a.linkbtn{text-decoration:none;display:inline-block}
 
   <section id="program">
     <h2>Чему я учу</h2>
-    <p>Всё выстроено по порядку: от первых нот до импровизации.</p>
-    <details open>
+    <p>Теория и техника идут вместе: всё выстроено по порядку, от первых нот до импровизации.</p>
+    <div class="tabs" role="tablist" aria-label="Теория и техника">
+      <button type="button" role="tab" id="tabT" aria-controls="panT" aria-selected="true">Теория</button>
+      <button type="button" role="tab" id="tabK" aria-controls="panK" aria-selected="false" tabindex="-1">Техника</button>
+    </div>
+    <div class="tabpanel" id="panT" role="tabpanel" aria-labelledby="tabT">
+    <details>
       <summary>Основы</summary>
       <ul>
         <li><b>Ноты на грифе</b><span>Как устроен гриф и как быстро запомнить расположение нот.</span></li>
         <li><b>Интервалы</b><span>Расстояния между звуками: основа аккордов, гамм и импровизации.</span></li>
         <li><b>Трезвучия и их обращения</b><span>Чем мажор отличается от минора и как трезвучие звучит в разных положениях.</span></li>
         <li><b>Открытые аккорды</b><span>Базовый набор для быстрого старта: простые песни уже на первых занятиях.</span></li>
+        <li><b>Типы нотации</b><span>Табулатура и нотный стан: как читать и записывать музыку обоими способами.</span></li>
+        <li><b>Ритмика</b><span>Метр, темп, длительности, основные ритмические рисунки и размеры.</span></li>
       </ul>
     </details>
     <details>
@@ -342,13 +358,34 @@ a.linkbtn{text-decoration:none;display:inline-block}
         <li><b>Другие звукоряды</b><span>Хроматическая, целотонная, цыганская и другие гаммы.</span></li>
       </ul>
     </details>
+    </div>
+    <div class="tabpanel" id="panK" role="tabpanel" aria-labelledby="tabK" hidden>
     <details>
-      <summary>Нотация и ритм</summary>
+      <summary>Постановка и руки</summary>
       <ul>
-        <li><b>Типы нотации</b><span>Табулатура и нотный стан: как читать и записывать музыку обоими способами.</span></li>
-        <li><b>Ритмика</b><span>Метр, темп, длительности, основные ритмические рисунки и размеры.</span></li>
+        <li><b>Постановка рук</b><span>Посадка, положение кисти и давление на струну: основа свободной игры без напряжения.</span></li>
+        <li><b>Правая рука</b><span>Игра медиатором, переменный штрих (alternate picking) и экономичный штрих.</span></li>
+        <li><b>Левая рука</b><span>Синхронизация с правой рукой и растяжка пальцев.</span></li>
+        <li><b>Баррэ</b><span>Как брать баррэ и переходить к нему от открытых аккордов.</span></li>
       </ul>
     </details>
+    <details>
+      <summary>Приёмы игры</summary>
+      <ul>
+        <li><b>Легато</b><span>Приёмы «Hammer on» и «Pull off»: плавное звукоизвлечение без лишних ударов по струне.</span></li>
+        <li><b>Слайды и бенды</b><span>Скольжение между нотами и подтяжки струны: как попадать в нужную высоту по слуху.</span></li>
+        <li><b>Тремоло и флажолеты</b><span>Быстрое повторение ноты и звонкие гармоники.</span></li>
+        <li><b>Октавы</b><span>Как играть октавами и где они уместны.</span></li>
+      </ul>
+    </details>
+    <details>
+      <summary>Ритм и инструмент</summary>
+      <ul>
+        <li><b>Игра под метроном</b><span>Как играть ровно и держать темп.</span></li>
+        <li><b>Строй и уход за инструментом</b><span>Как менять струны, настраивать гитару и регулировать анкер.</span></li>
+      </ul>
+    </details>
+    </div>
   </section>
 
   <section id="video">
@@ -366,10 +403,9 @@ a.linkbtn{text-decoration:none;display:inline-block}
     <p>Занятия по видеосвязи дополняет медиасреда: я не только преподаватель, но и куратор, который помогает двигаться вперёд между уроками.</p>
     <div class="info">
       <div class="tile"><b>По видеосвязи</b><span>Заниматься можно в комфортной обстановке прямо из дома.</span></div>
-      <div class="tile"><b>Авторские материалы</b><span>Доступ к моим пособиям и дополнительным видеоурокам, к которым можно вернуться в любое время.</span></div>
-      <div class="tile"><b>Куратор</b><span>Даю рекомендации и литературу, которая помогает не выгорать и не сдаваться.</span></div>
-      <div class="tile"><b>Время</b><span>Подберём удобное вместе: свяжись со мной удобным способом.</span></div>
+      <div class="tile"><b>Комфортное расписание</b><span>Подберём вместе: свяжись со мной удобным способом.</span></div>
     </div>
+  
   </section>
 
   <section id="materials">
@@ -572,5 +608,9 @@ g.addEventListener('pointerup',up);g.addEventListener('pointercancel',up);
 [].forEach.call(document.querySelectorAll('.gallery'),init);
 })();
 </script>
+<script>(function(){try{var t=document.querySelectorAll('.tabs [role=tab]');if(!t.length)return;
+function sel(n){for(var i=0;i<t.length;i++){var on=i===n;t[i].setAttribute('aria-selected',on);t[i].tabIndex=on?0:-1;document.getElementById(t[i].getAttribute('aria-controls')).hidden=!on}}
+for(var i=0;i<t.length;i++)(function(i){t[i].addEventListener('click',function(){sel(i)});
+t[i].addEventListener('keydown',function(e){var k=e.key;if(k==='ArrowRight'||k==='ArrowLeft'){var n=(i+1)%t.length;sel(n);t[n].focus();e.preventDefault()}})})(i)}catch(e){}})();</script>
 </body>
 </html>
