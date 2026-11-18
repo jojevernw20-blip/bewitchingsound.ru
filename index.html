@@ -265,7 +265,7 @@ section#program{background:var(--sun);color:var(--onsun);border-radius:18px;padd
 .tgauge{position:relative;width:100%;height:30px;border:1.5px solid var(--line);border-radius:15px;overflow:hidden}
 .tgauge .tz{position:absolute;left:45%;width:10%;top:0;bottom:0;background:rgba(157,184,224,.25)}
 .tgauge .tc{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--line)}
-.tgauge .tn{position:absolute;left:50%;top:3px;bottom:3px;width:6px;margin-left:-3px;border-radius:3px;background:var(--muted);transition:left .12s linear,background .2s}
+.tgauge .tn{position:absolute;left:50%;top:3px;bottom:3px;width:6px;margin-left:-3px;border-radius:3px;background:var(--muted);transition:background .2s}
 .tgauge .tn.live{background:var(--sun)}
 .tends{display:flex;justify-content:space-between;width:100%;margin:6px 0 10px;font:12px "IBM Plex Mono",monospace;color:var(--muted)}
 .mm .tstat{align-self:center;text-align:center;font:500 15px "IBM Plex Mono",monospace;margin-bottom:14px;min-height:1.5em;max-width:none}
@@ -736,49 +736,66 @@ var $=function(i){return document.getElementById(i)},mod=$('tModal'),opn=$('tOpe
 if(!mod||!opn||!go)return;
 var circ=$('tCirc'),noteEl=$('tNote'),hzEl=$('tHz'),needle=$('tNeedle'),stat=$('tStat'),cEl=$('tCents'),btns=mod.querySelectorAll('.tbtn');
 var S=[82.407,110,146.832,195.998,246.942,329.628],NAMES=['E','A','D','G','B','E'];
-var ctx=null,stream=null,src=null,an=null,buf=null,fbuf=null,raf=0,last=0,running=false,locked=-1,holdUntil=0,lastGood=0,hist=[],dir='';
+var ctx=null,stream=null,src=null,an=null,buf=null,fbuf=null,raf=0,lastAn=0,prevT=0,running=false,locked=-1,holdUntil=0,lastGood=0,hist=[],miss=0;
+var have=false,ti=0,tgt=0,disp=0,okState=false,lastTxt=0,lastHz=0;
 function ensure(){if(!ctx){var C=window.AudioContext||window.webkitAudioContext;if(!C)return false;ctx=new C()}
  if(ctx.state==='suspended')ctx.resume();return true}
 function say(t){if(stat.textContent!==t)stat.textContent=t}
 function yin(b,sr){
- var W=2048,minT=Math.floor(sr/450),maxT=Math.min(Math.floor(sr/65),b.length-W-2),i,j,tau;
+ var W=2048,minT=Math.floor(sr/450),maxT=Math.min(Math.floor(sr/65),b.length-W-2),j,tau;
  var d=new Float32Array(maxT+1),cm=new Float32Array(maxT+1),run=0;
  for(tau=1;tau<=maxT;tau++){var sum=0;for(j=0;j<W;j++){var df=b[j]-b[j+tau];sum+=df*df}d[tau]=sum}
  cm[0]=1;for(tau=1;tau<=maxT;tau++){run+=d[tau];cm[tau]=run?d[tau]*tau/run:1}
  tau=minT;var found=-1;
- while(tau<maxT){if(cm[tau]<0.15){while(tau+1<=maxT&&cm[tau+1]<cm[tau])tau++;found=tau;break}tau++}
- if(found<0){var m=1,mt=-1;for(tau=minT;tau<=maxT;tau++){if(cm[tau]<m){m=cm[tau];mt=tau}}if(mt>0&&m<0.3)found=mt}
+ while(tau<maxT){if(cm[tau]<0.18){while(tau+1<=maxT&&cm[tau+1]<cm[tau])tau++;found=tau;break}tau++}
+ if(found<0){var m=1,mt=-1;for(tau=minT;tau<=maxT;tau++){if(cm[tau]<m){m=cm[tau];mt=tau}}if(mt>0&&m<0.22)found=mt}
  if(found<1||found>=maxT)return 0;
- var x0=found-1,x2=found+1,a=cm[x0],bb=cm[found],c=cm[x2],den=2*(a-2*bb+c),better=den?found+(a-c)/den:found;
+ var a=cm[found-1],bb=cm[found],c=cm[found+1],den=2*(a-2*bb+c),better=den?found+(a-c)/den:found;
  return sr/better}
 function median(a){var s=a.slice().sort(function(x,y){return x-y});return s[Math.floor(s.length/2)]}
 function nearest(f){var bi=0,bc=1e9;for(var i=0;i<S.length;i++){var c=Math.abs(Math.log(f/S[i]));if(c<bc){bc=c;bi=i}}return bi}
-function mark(ti){for(var i=0;i<btns.length;i++){btns[i].classList.toggle('on',i===ti);btns[i].classList.toggle('lock',i===locked);btns[i].setAttribute('aria-pressed',i===locked?'true':'false')}}
-function idle(){hist=[];circ.classList.remove('ok');needle.style.left='50%';needle.classList.remove('live');cEl.textContent='';dir='';
- noteEl.textContent=locked>=0?NAMES[locked]:'—';hzEl.textContent=locked>=0?'цель '+String(S[locked]).replace('.',',').slice(0,6)+' Гц':'жду звук';mark(locked);
+function mark(t){for(var i=0;i<btns.length;i++){btns[i].classList.toggle('on',i===t);btns[i].classList.toggle('lock',i===locked);btns[i].setAttribute('aria-pressed',i===locked?'true':'false')}}
+function idle(){have=false;hist=[];miss=0;okState=false;disp=0;tgt=0;circ.classList.remove('ok');needle.style.left='50%';needle.classList.remove('live');cEl.textContent='';
+ noteEl.textContent=locked>=0?NAMES[locked]:'—';hzEl.textContent=locked>=0?'цель '+String(S[locked]).replace('.',','):'жду звук';mark(locked);
  say(running?'Слушаю… сыграй открытую струну':'Нажми «Включить микрофон»')}
-function show(f){hist.push(f);if(hist.length>5)hist.shift();var med=median(hist),ti=locked>=0?locked:nearest(med),cents=1200*Math.log(med/S[ti])/Math.LN2,ok=Math.abs(cents)<=5;
- noteEl.textContent=NAMES[ti];hzEl.textContent=med.toFixed(1).replace('.',',')+' Гц';
- needle.style.left=(50+Math.max(-50,Math.min(50,cents)))+'%';needle.classList.add('live');circ.classList.toggle('ok',ok);
- var c=Math.round(cents);cEl.textContent=(c>0?'+':c<0?'−':'')+Math.abs(c)+' ¢';
- say(ok?'Строй!':cents<0?'Подтяни струну':'Ослабь струну');mark(ti)}
-function loop(t){if(!running)return;raf=requestAnimationFrame(loop);if(t-last<45)return;last=t;
- var now=performance.now();if(now<holdUntil)return;
- var sr=ctx.sampleRate,b=buf;
- if(an.getFloatTimeDomainData){an.getFloatTimeDomainData(buf)}else{an.getByteTimeDomainData(fbuf);for(var i=0;i<fbuf.length;i++)buf[i]=(fbuf[i]-128)/128}
- var s=0;for(var k=0;k<b.length;k+=4)s+=b[k]*b[k];var rms=Math.sqrt(s/(b.length/4));
- var f=rms>0.01?yin(b,sr):0;
- if(f>60&&f<480){lastGood=now;show(f)}else if(now-lastGood>600){idle()}}
+function feed(f){
+ if(hist.length>=3){var m=median(hist);if(Math.abs(Math.log(f/m))>0.06){miss++;if(miss<4)return;hist=[]}}
+ miss=0;hist.push(f);if(hist.length>7)hist.shift();
+ var med=median(hist);ti=locked>=0?locked:nearest(med);
+ var c=1200*Math.log(med/S[ti])/Math.LN2;tgt=Math.max(-100,Math.min(100,c));
+ if(!have){have=true;disp=tgt}
+ var now=performance.now();if(now-lastHz>250){lastHz=now;hzEl.textContent=med.toFixed(1).replace('.',',')+' Гц'}
+ noteEl.textContent=NAMES[ti];mark(ti)}
+function render(dt){
+ if(!have)return;
+ disp+=(tgt-disp)*(1-Math.exp(-dt/220));
+ needle.style.left=(50+Math.max(-50,Math.min(50,disp)))+'%';needle.classList.add('live');
+ var a=Math.abs(disp);if(okState){if(a>7)okState=false}else{if(a<=4)okState=true}
+ circ.classList.toggle('ok',okState);
+ say(okState?'Строй!':disp<0?'Подтяни струну':'Ослабь струну');
+ var now=performance.now();if(now-lastTxt>150){lastTxt=now;var c=Math.round(disp);cEl.textContent=(c>0?'+':c<0?'−':'')+Math.abs(c)+' ¢'}}
+function loop(t){if(!running)return;raf=requestAnimationFrame(loop);
+ var dt=prevT?Math.min(100,t-prevT):16;prevT=t;
+ var now=performance.now();
+ if(t-lastAn>=45&&now>=holdUntil){lastAn=t;
+  var b=buf;
+  if(an.getFloatTimeDomainData){an.getFloatTimeDomainData(buf)}else{an.getByteTimeDomainData(fbuf);for(var i=0;i<fbuf.length;i++)buf[i]=(fbuf[i]-128)/128}
+  var s=0;for(var k=0;k<b.length;k+=4)s+=b[k]*b[k];var rms=Math.sqrt(s/(b.length/4));
+  var f=rms>0.0006?yin(b,ctx.sampleRate):0;
+  if(f>60&&f<480){lastGood=now;feed(f)}else if(have&&now-lastGood>1300){idle()}}
+ render(dt)}
+function begin(st){
+ if(mod.hidden){st.getTracks().forEach(function(t){t.stop()});return}
+ stream=st;src=ctx.createMediaStreamSource(st);an=ctx.createAnalyser();an.fftSize=4096;an.smoothingTimeConstant=0;src.connect(an);
+ buf=new Float32Array(an.fftSize);fbuf=new Uint8Array(an.fftSize);running=true;lastGood=0;prevT=0;lastAn=0;go.disabled=false;go.textContent='Остановить';go.setAttribute('aria-pressed','true');idle();raf=requestAnimationFrame(loop)}
+function fail(e){go.disabled=false;var n=e&&e.name;
+ say(n==='NotFoundError'?'Микрофон не найден.':'Нет доступа к микрофону. Разреши его в настройках браузера. Если страница открыта внутри приложения, открой её в обычном браузере.')}
 function start(){
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){say('Этот браузер не поддерживает доступ к микрофону.');return}
  if(!ensure()){say('Этот браузер не поддерживает работу со звуком.');return}
  go.disabled=true;say('Жду разрешения на микрофон…');
- navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}).then(function(st){
-  if(mod.hidden){st.getTracks().forEach(function(t){t.stop()});return}
-  stream=st;src=ctx.createMediaStreamSource(st);an=ctx.createAnalyser();an.fftSize=4096;an.smoothingTimeConstant=0;src.connect(an);
-  buf=new Float32Array(an.fftSize);fbuf=new Uint8Array(an.fftSize);running=true;lastGood=0;go.disabled=false;go.textContent='Остановить';go.setAttribute('aria-pressed','true');idle();raf=requestAnimationFrame(loop)
- }).catch(function(e){go.disabled=false;var n=e&&e.name;
-  say(n==='NotFoundError'?'Микрофон не найден.':'Нет доступа к микрофону. Разреши его в настройках браузера. Если страница открыта внутри приложения, открой её в обычном браузере.')})}
+ navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}).then(begin).catch(function(e){
+  if(e&&e.name==='OverconstrainedError'){navigator.mediaDevices.getUserMedia({audio:true}).then(begin).catch(fail)}else fail(e)})}
 function stop(){running=false;cancelAnimationFrame(raf);
  if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}
  try{if(src)src.disconnect()}catch(e){}src=null;an=null;go.disabled=false;go.textContent='Включить микрофон';go.setAttribute('aria-pressed','false');idle()}
@@ -787,9 +804,9 @@ function pluck(f){if(!ensure())return;var sr=ctx.sampleRate,n=Math.floor(sr*2.2)
  for(i=p+1;i<n;i++)d[i]=.997*.5*(d[i-p]+d[i-p-1]);
  var s=ctx.createBufferSource(),lp=ctx.createBiquadFilter(),g=ctx.createGain(),t=ctx.currentTime;
  s.buffer=b;lp.type='lowpass';lp.frequency.value=3000;g.gain.setValueAtTime(.55,t);g.gain.exponentialRampToValueAtTime(.001,t+2);
- s.connect(lp);lp.connect(g);g.connect(ctx.destination);s.start(t);holdUntil=performance.now()+2200;hist=[]}
+ s.connect(lp);lp.connect(g);g.connect(ctx.destination);s.start(t);holdUntil=performance.now()+2200;hist=[];miss=0}
 for(var i=0;i<btns.length;i++)(function(i){btns[i].addEventListener('click',function(){
- if(locked===i){locked=-1;if(!running)idle();else mark(-1)}else{locked=i;pluck(S[i]);if(!running)idle();else{noteEl.textContent=NAMES[i];mark(i)}}
+ if(locked===i){locked=-1;if(!running)idle();else{have=false;hist=[];idle()}}else{locked=i;pluck(S[i]);hist=[];if(!running)idle();else{noteEl.textContent=NAMES[i]}}
  mark(locked)})})(i);
 function open(){mod.hidden=false;idle();cls.focus()}
 function close(){stop();locked=-1;mark(-1);mod.hidden=true;if(ctx){try{ctx.close()}catch(e){}ctx=null}opn.focus()}
