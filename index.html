@@ -279,6 +279,10 @@ section#program{background:var(--sun);color:var(--onsun);border-radius:18px;padd
 .tbtn:focus-visible,.htools .mopen:focus-visible{outline:3px solid var(--em);outline-offset:3px}
 .mm .thint{align-self:center;text-align:center;font:12px/1.5 "IBM Plex Mono",monospace;color:var(--muted);margin-bottom:16px;max-width:none}
 @media (prefers-reduced-motion:reduce){.tgauge .tn,.tcirc{transition:none}}
+footer p{margin:0 0 10px;max-width:none;line-height:1.6}
+footer .copy{font-size:12px}
+footer .linkbtn{font-size:inherit}
+footer p:last-child{margin-bottom:0}
 </style>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%2240%20-20%20330%20310%22%3E%3Crect%20x=%2240%22%20y=%22-20%22%20width=%22330%22%20height=%22310%22%20rx=%2256%22%20fill=%22%23131A28%22/%3E%3Ccircle%20cx=%22245%22%20cy=%22150%22%20r=%22100%22%20fill=%22%23E8D9A8%22/%3E%3Cg%20stroke=%22%23E6EBF3%22%20stroke-width=%229%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22%20fill=%22none%22%3E%3Cg%20transform=%22translate(30%206)%20rotate(24%20160%20190)%22%3E%3Crect%20x=%22147%22%20y=%222%22%20width=%2224%22%20height=%2230%22%20rx=%225%22/%3E%3Cpath%20d=%22M151%2032V134M167%2032V134%22/%3E%3Cpath%20fill=%22%23131A28%22%20d=%22M159%20122c24%200%2040%2014%2036%2034%2014%208%2022%2022%2022%2038%200%2030-26%2056-58%2056s-58-26-58-56c0-16%208-30%2022-38-4-20%2012-34%2036-34z%22/%3E%3Ccircle%20cx=%22159%22%20cy=%22196%22%20r=%2215%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
 </head>
@@ -351,7 +355,7 @@ section#program{background:var(--sun);color:var(--onsun);border-radius:18px;padd
     <p>За это время я понял главное: найти подход к каждому человеку важнее всего. Невозможно знать всё и делать всё идеально, но можно правильно объяснить и подобрать путь под конкретного ученика.</p>
     <p>Поэтому на занятиях я даю то, чего мне самому не хватало. Каждая тема опирается на предыдущую, а теории ровно столько, сколько пригодится в игре. У меня высшее педагогическое образование (МПГУ), так что я умею объяснять сложное простым языком.</p>
     <p>Мне близки спокойные жанры: инди, эмбиент, всё неспешное, что оставляет место для тишины. Меня вдохновляют Рик Рубин и Филип Тосио Судо, и их взгляд на музыку стал частью моего подхода: осознанность, внимание к звуку, немного медитации. Играть лучше, когда не торопишься. Поэтому на занятиях мы не гонимся за скоростью, а замедляемся, слушаем каждую ноту и чувствуем собственные руки.</p>
-    <p>Моя цель — помочь тебе пройти этот путь быстрее и без лишних ошибок, а главное, чтобы занятия приносили удовольствие. Я занимаюсь и с теми, кто берёт гитару впервые, и с теми, кто давно играет, но хочет понять, как всё устроено.</p></div>
+    <p>Моя цель — помочь тебе пройти этот путь быстрее и без лишних ошибок, а главное, чтобы занятия приносили удовольствие. Я работаю с начинающими и продолжающими: и с теми, кто берёт гитару впервые, и с теми, кто уже немного играет и хочет двигаться дальше.</p></div>
     <p class="more"><button class="linkbtn" id="aboutMore" type="button" aria-expanded="false" aria-controls="aboutText">Читать дальше</button></p>
     <div class="tiles">
       <div class="tile"><b>70 / 30</b><span>практика и теория</span></div>
@@ -426,8 +430,6 @@ section#program{background:var(--sun);color:var(--onsun);border-radius:18px;padd
       <ul>
         <li><b>Аккорды с добавлением и исключением ступеней</b><span>Как «раскрасить» обычный аккорд, добавив или убрав ноты.</span></li>
         <li><b>Септаккорды</b><span>Учимся строить их самостоятельно и понимать, где они уместны.</span></li>
-        <li><b>Септаккорды с добавленными ступенями и альтерациями</b><span>Как расширять септаккорды и делать это стильно.</span></li>
-        <li><b>Гармонизация мажорной и минорной гамм септаккордами</b><span>Выстраиваем аккорды на каждой ступени гаммы.</span></li>
         <li><b>Арпеджио</b><span>Игра аккордов по отдельным нотам: звучание становится мелодичнее.</span></li>
       </ul>
     </details>
@@ -546,7 +548,11 @@ section#program{background:var(--sun);color:var(--onsun);border-radius:18px;padd
       </g></g></svg>
   </section>
 </main>
-<footer class="mono">Никита Белец · Keith Bewitchingsound · уроки гитары онлайн</footer>
+<footer class="mono">
+  <p>Никита Белец · Keith Bewitchingsound · уроки гитары онлайн</p>
+  <p class="copy">© 2026 Никита Белец (Keith Bewitchingsound). <button type="button" class="linkbtn" id="rightsBtn" aria-expanded="false" aria-controls="rightsTxt">All rights reserved.</button></p>
+  <p class="copy" id="rightsTxt" hidden>Тексты, иллюстрации, шпаргалки и методика занятий на этом сайте являются авторскими материалами. Копирование и распространение без письменного разрешения автора запрещены.</p>
+</footer>
 <button type="button" class="totop" id="toTop" aria-label="Наверх"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V5M6 11l6-6 6 6"/></svg></button>
 <div class="modal" id="tModal" hidden role="dialog" aria-modal="true" aria-labelledby="tMt">
   <button type="button" class="lbx" id="tClose" aria-label="Закрыть тюнер"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -816,5 +822,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!mod.hidden
 go.addEventListener('click',function(){running?stop():start()});
 document.addEventListener('visibilitychange',function(){if(document.hidden&&running)stop()});
 }catch(e){}})();</script>
+<script>(function(){try{var b=document.getElementById('rightsBtn'),t=document.getElementById('rightsTxt');if(!b||!t)return;
+b.addEventListener('click',function(){var show=t.hidden;t.hidden=!show;b.setAttribute('aria-expanded',String(show))})}catch(e){}})();</script>
 </body>
 </html>
