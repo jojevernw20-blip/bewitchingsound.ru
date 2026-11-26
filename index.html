@@ -341,6 +341,17 @@ footer{display:flex;flex-direction:column;gap:22px}
 footer .fl{flex:1;min-width:0}
 footer .htools{align-self:center}
 @media (min-width:621px){footer{flex-direction:row;justify-content:space-between;align-items:flex-start;gap:24px}footer .htools{align-self:flex-start}}
+.faq{margin-top:44px}
+.qa{padding:4px 0 8px}
+.qa b{display:block;margin-top:18px;font:700 18px/1.3 "Rubik",Arial,sans-serif}
+.qa b:first-child{margin-top:6px}
+.qa p{margin:6px 0 0;font-size:16px;line-height:1.65;max-width:none}
+.qa a{color:var(--em);text-decoration:underline;text-underline-offset:3px}
+.whyp{margin:28px 0 0}
+.whybox{margin-top:14px;border:1px solid var(--line);border-radius:14px;padding:4px 18px 18px}
+.whybox .qa b{font:600 16px/1.35 "Rubik",Arial,sans-serif}
+.whybox .qa p{font-size:15px;line-height:1.65;color:var(--muted)}
+.qa p+p{margin-top:10px}
 </style>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%2240%20-20%20330%20310%22%3E%3Crect%20x=%2240%22%20y=%22-20%22%20width=%22330%22%20height=%22310%22%20rx=%2256%22%20fill=%22%23131A28%22/%3E%3Ccircle%20cx=%22245%22%20cy=%22150%22%20r=%22100%22%20fill=%22%23E8D9A8%22/%3E%3Cg%20stroke=%22%23E6EBF3%22%20stroke-width=%229%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22%20fill=%22none%22%3E%3Cg%20transform=%22translate(30%206)%20rotate(24%20160%20190)%22%3E%3Crect%20x=%22147%22%20y=%222%22%20width=%2224%22%20height=%2230%22%20rx=%225%22/%3E%3Cpath%20d=%22M151%2032V134M167%2032V134%22/%3E%3Cpath%20fill=%22%23131A28%22%20d=%22M159%20122c24%200%2040%2014%2036%2034%2014%208%2022%2022%2022%2038%200%2030-26%2056-58%2056s-58-26-58-56c0-16%208-30%2022-38-4-20%2012-34%2036-34z%22/%3E%3Ccircle%20cx=%22159%22%20cy=%22196%22%20r=%2215%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
 </head>
@@ -430,6 +441,20 @@ footer .htools{align-self:center}
       <li class="arr" aria-hidden="true"><svg viewBox="0 0 320 64" class="a2"><g filter="url(#w)" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M28 2 C 28 26, 70 34, 120 26 C 170 18, 214 8, 240 20 C 262 30, 252 50, 234 44 C 216 38, 236 20, 262 28 C 284 35, 290 48, 292 58"/><path d="M296.0 44.6 L292.0 58.0 L283.1 47.2"/></g></svg></li>
       <li><b>Выстрою программу</b><span>Составлю занятия под тебя: с учётом уровня, целей и твоих вкусов.</span></li>
     </ol>
+    <p class="more whyp"><button class="linkbtn" id="whyMore" type="button" aria-expanded="false" aria-controls="whyBox">Почему онлайн?</button></p>
+    <div class="whybox" id="whyBox" hidden>
+      <div class="qa">
+        <b>Эффективны ли онлайн-занятия?</b>
+        <p>Да. Для игры на гитаре важнее не то, где мы находимся, а то, как проходит занятие. Мы занимаемся в реальном времени: я слышу и вижу, как ты играешь, слежу за посадкой и положением рук, показываю, объясняю и сразу помогаю исправить ошибки. Это не видеокурс и не самоучитель: обратная связь есть на каждом занятии. Около 70% времени уходит на практику, а все учебные материалы остаются у тебя.</p>
+        <b>В чём преимущества онлайн-формата?</b>
+        <p>Экономия времени и свобода в выборе места: не нужно никуда ехать и тратить время на сборы, можно спокойно заниматься дома, в привычной обстановке. Занятия проходят один на один, всё внимание уделяется тебе, а объяснения и темп подстраиваются под твой возраст, уровень и интересы.</p>
+        <p>Время занятий мы подбираем вместе. А если планы изменились, занятие можно бесплатно перенести, предупредив меня не менее чем за 24 часа.</p>
+        <b>Сложно ли заниматься по видеосвязи?</b>
+        <p>Совсем нет. Нужны только гитара, телефон или компьютер и стабильное интернет-соединение. Если возникнут технические вопросы, напиши мне заранее, и мы во всём разберёмся.</p>
+        <b>А если я не пойму, подходит ли мне такой формат?</b>
+        <p>Это нормально. На первом занятии мы познакомимся, попробуем формат на практике, я оценю твой уровень и узнаю, чему ты хочешь научиться. Первое занятие можно взять со скидкой 50%: подробности в разделе <a href="#game">«Скидка 50%»</a>.</p>
+      </div>
+    </div>
   </section>
 
   <section id="program">
@@ -896,5 +921,7 @@ window.addEventListener('scroll',hide,{passive:true});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')hide();if(e.key==='Tab')document.documentElement.classList.add('kbd')});
 document.addEventListener('pointerdown',function(){document.documentElement.classList.remove('kbd')});
 }catch(e){}})();</script>
+<script>(function(){try{var b=document.getElementById('whyMore'),t=document.getElementById('whyBox');if(!b||!t)return;
+b.addEventListener('click',function(){var show=t.hidden;t.hidden=!show;b.setAttribute('aria-expanded',String(show));b.textContent=show?'Скрыть':'Почему онлайн?'})}catch(e){}})();</script>
 </body>
 </html>
